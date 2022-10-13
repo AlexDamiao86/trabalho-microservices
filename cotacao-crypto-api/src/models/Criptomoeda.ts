@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 class Criptomoeda {
   id: string;
@@ -13,7 +13,7 @@ class Criptomoeda {
   // timestamp_ultima_atualizacao: Date;
 
   constructor({ codigo, nome, descricao }: Omit<Criptomoeda, 'id'>) {
-    this.id = uuidv4();
+    this.id = uuid();
     this.codigo = codigo;
     this.nome = nome;
     this.descricao = descricao;

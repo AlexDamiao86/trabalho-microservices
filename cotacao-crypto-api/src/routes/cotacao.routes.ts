@@ -1,17 +1,10 @@
 import { Router } from 'express';
+import { CotacaoController } from '../controllers/CotacaoController';
 
 const cotacaoRouter = Router();
 
-const appointments = [];
+const cotacaoController = new CotacaoController();
 
-cotacaoRouter.get('/', (request, response) => {
-  const { provider, date } = request.body;
-  const appointment = {
-    provider,
-    date,
-  };
-  appointments.push(appointment);
-  return response.json(appointment);
-});
+cotacaoRouter.get('/', cotacaoController.show);
 
 export default cotacaoRouter;
