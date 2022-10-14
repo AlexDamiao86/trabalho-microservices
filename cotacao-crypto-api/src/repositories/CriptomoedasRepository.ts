@@ -1,10 +1,5 @@
+import { CreateCriptomoedaDTO } from '../dto/CreateCriptomoedaRequestDTO';
 import Criptomoeda from '../models/Criptomoeda';
-
-interface CreateCriptomoedaDTO {
-  codigo: string;
-  nome: string;
-  descricao: string;
-}
 
 class CriptomoedasRepository {
   private criptomoedas: Criptomoeda[];
@@ -17,8 +12,18 @@ class CriptomoedasRepository {
     codigo,
     nome,
     descricao,
+    cotacao_compra,
+    cotacao_venda,
+    variacao
   }: CreateCriptomoedaDTO): Criptomoeda {
-    const criptomoeda = new Criptomoeda({codigo, nome, descricao});
+    const criptomoeda = new Criptomoeda({
+      codigo,
+      nome,
+      descricao,
+      cotacao_compra,
+      cotacao_venda,
+      variacao
+    });
     this.criptomoedas.push(criptomoeda);
     return criptomoeda;
   }

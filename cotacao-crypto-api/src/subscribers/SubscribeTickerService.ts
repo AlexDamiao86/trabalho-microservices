@@ -1,11 +1,17 @@
 const { Socket } = require('phoenix-channels');
 const { ws_endpoint } = require('../config/index');
 
+import CreateUpdateCriptomoedaService from '../services/CreateUpdateCriptomoedaService';
+import CriptomoedasRepository from '../repositories/CriptomoedasRepository';
+import {CarregarDescricaoCriptomoedas, descricaoCriptomoedas} from './CarregarDescricaoCriptomoedas';
+
+const criptomoedasRepository = new CriptomoedasRepository();
+
 class SubscribeTickerService {
   private socket;
 
   constructor() {
-    console.log('endpoint', ws_endpoint);
+    CarregarDescricaoCriptomoedas();
     this.socket = new Socket(`${ws_endpoint}/orderbook/socket`);
   }
 
@@ -22,26 +28,44 @@ class SubscribeTickerService {
       console.log('Falha de conexão com o websocket em', ws_endpoint);
     });
 
-    const channel = this.socket.channel(`${TOPIC_NAME}:${MARKET}`,{});
+    const channel = this.socket.channel(`${TOPIC_NAME}:${MARKET}`, {});
 
     channel
       .join()
       .receive('ok', () => {
-        console.log('Canal inscrito com sucesso',`${TOPIC_NAME}:${MARKET}`);
+        console.log('Canal inscrito com sucesso', `${TOPIC_NAME}:${MARKET}`);
       })
       .receive('error', () => {
         console.log(
-          'Não foi possível se inscrever no canal',`${TOPIC_NAME}:${MARKET}`,
+          'Não foi possível se inscrever no canal',
+          `${TOPIC_NAME}:${MARKET}`,
         );
       });
 
-    channel
-      .on('price', (response: any) => {
-        console.log('Evento "price" recebido:', response);
+    channel.on('price', (response: any) => {
+      if (response.success == true) {
+        console.log('Evento "price" recebido com sucesso!');
+        for (var market in response) {
+          if (market != 'success') {
+            const { buy, sell } = response[market];
+            const { codigo, nome, descricao } =
+              descricaoCriptomoedas.get(market);
+            const criptomoeda = new CreateUpdateCriptomoedaService(
+              criptomoedasRepository,
+            ).execute({
+              codigo,
+              nome,
+              descricao,
+              cotacao_venda: buy,
+              cotacao_compra: sell,
+              variacao: response[market].var,
+            });
+            console.log(criptomoeda);
+          }
+        }
+      }
     });
   }
 }
 
 export default new SubscribeTickerService();
-
-

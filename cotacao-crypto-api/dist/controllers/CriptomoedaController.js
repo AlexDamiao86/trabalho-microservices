@@ -14,21 +14,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CriptomoedaController = void 0;
 const CriptomoedasRepository_1 = __importDefault(require("../repositories/CriptomoedasRepository"));
-const CreateCriptomoedaService_1 = __importDefault(require("../services/CreateCriptomoedaService"));
+const CreateUpdateCriptomoedaService_1 = __importDefault(require("../services/CreateUpdateCriptomoedaService"));
 const criptomoedasRepository = new CriptomoedasRepository_1.default();
 class CriptomoedaController {
     create(request, response) {
         return __awaiter(this, void 0, void 0, function* () {
             const { codigo, nome, descricao } = request.body;
-            const criptomoeda = new CreateCriptomoedaService_1.default(criptomoedasRepository).execute({
+            const criptomoeda = new CreateUpdateCriptomoedaService_1.default(criptomoedasRepository).execute({
                 codigo,
                 nome,
                 descricao,
+                cotacao_compra: 0.0,
+                cotacao_venda: 0.0,
+                variacao: 0.0
             });
             return response.status(201).json(criptomoeda);
         });
     }
-    show(request, response) {
+    show(_, response) {
         return __awaiter(this, void 0, void 0, function* () {
             return response.json(criptomoedasRepository.all());
         });

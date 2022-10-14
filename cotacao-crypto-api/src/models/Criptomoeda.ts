@@ -1,28 +1,33 @@
 import { v4 as uuid } from 'uuid';
+import { CreateCriptomoedaDTO } from '../dto/CreateCriptomoedaRequestDTO';
 
 class Criptomoeda {
   id: string;
   codigo: string;
   nome: string;
   descricao: string;
-  //cotacao_atual_compra: number;
-  //cotacao_atual_venda: number;
-  //variacao: number;
-  // quantidade_maxima_transacao: number;
-  // quantidade_minima_transacao: number;
-  // timestamp_ultima_atualizacao: Date;
+  cotacao_compra: number;
+  cotacao_venda: number;
+  variacao: number;
+  timestamp_atualizacao: string;
 
-  constructor({ codigo, nome, descricao }: Omit<Criptomoeda, 'id'>) {
+  constructor({
+    codigo,
+    nome,
+    descricao,
+    cotacao_compra,
+    cotacao_venda,
+    variacao
+  }: CreateCriptomoedaDTO) {
     this.id = uuid();
     this.codigo = codigo;
     this.nome = nome;
     this.descricao = descricao;
-    //this.cotacao_atual_compra = 0.0;
-    //this.cotacao_atual_venda = 0.0;
-    //this.variacao = 0.0;
+    this.cotacao_compra = cotacao_compra;
+    this.cotacao_venda = cotacao_venda;
+    this.variacao = variacao;
+    this.timestamp_atualizacao = new Date().toISOString();
   }
 }
 
 export default Criptomoeda;
-
-

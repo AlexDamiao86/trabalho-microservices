@@ -8,8 +8,15 @@ class CriptomoedasRepository {
     constructor() {
         this.criptomoedas = [];
     }
-    create({ codigo, nome, descricao, }) {
-        const criptomoeda = new Criptomoeda_1.default({ codigo, nome, descricao });
+    create({ codigo, nome, descricao, cotacao_compra, cotacao_venda, variacao }) {
+        const criptomoeda = new Criptomoeda_1.default({
+            codigo,
+            nome,
+            descricao,
+            cotacao_compra,
+            cotacao_venda,
+            variacao
+        });
         this.criptomoedas.push(criptomoeda);
         return criptomoeda;
     }
