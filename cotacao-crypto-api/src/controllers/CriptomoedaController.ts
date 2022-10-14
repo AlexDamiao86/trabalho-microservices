@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
-import CriptomoedasRepository from '../repositories/CriptomoedasRepository';
 import CreateUpdateCriptomoedaService from "../services/CreateUpdateCriptomoedaService";
 
-const criptomoedasRepository = new CriptomoedasRepository();
+const { criptomoedasRepository } = require('../loaders/CarregarCriptomoedasRepository');
 
 class CriptomoedaController {
   async create(request: Request, response: Response) {

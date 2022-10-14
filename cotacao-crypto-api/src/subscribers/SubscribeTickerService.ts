@@ -1,11 +1,9 @@
 const { Socket } = require('phoenix-channels');
 const { ws_endpoint } = require('../config/index');
+const { criptomoedasRepository } = require('../loaders/CarregarCriptomoedasRepository');
 
 import CreateUpdateCriptomoedaService from '../services/CreateUpdateCriptomoedaService';
-import CriptomoedasRepository from '../repositories/CriptomoedasRepository';
-import {CarregarDescricaoCriptomoedas, descricaoCriptomoedas} from './CarregarDescricaoCriptomoedas';
-
-const criptomoedasRepository = new CriptomoedasRepository();
+import {CarregarDescricaoCriptomoedas, descricaoCriptomoedas} from '../loaders/CarregarDescricaoCriptomoedas';
 
 class SubscribeTickerService {
   private socket;
