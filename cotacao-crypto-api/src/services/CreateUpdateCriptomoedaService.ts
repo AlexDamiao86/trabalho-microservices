@@ -18,17 +18,29 @@ export class CreateUpdateCriptomoedaService {
     variacao
     }: CreateCriptomoedaDTO): Criptomoeda {
 
+    const criptomoedaExistente = this.criptomoedasRepository.findByCodigo(codigo);
 
-    const criptomoeda = this.criptomoedasRepository.create({
-      codigo,
-      nome,
-      descricao,
-      cotacao_compra,
-      cotacao_venda,
-      variacao
-    });
-
-    return criptomoeda;
+    if (criptomoedaExistente) {
+      // Atualizar criptomoeda
+      const criptomoedaAtualizada = this.criptomoedasRepository.updateCripto(
+          criptomoedaExistente,
+          {cotacao_compra, cotacao_venda, variacao}
+        );
+      console.log('Atualizou criptomoeda\n');
+      return criptomoedaAtualizada;
+    } else {
+      // Criar criptomoeda
+      const criptomoeda = this.criptomoedasRepository.create({
+        codigo,
+        nome,
+        descricao,
+        cotacao_compra,
+        cotacao_venda,
+        variacao
+      });
+      console.log('Criou criptomoeda\n');
+      return criptomoeda;
+    }
   }
 }
 
