@@ -13,9 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CriptomoedaController = void 0;
-const CriptomoedasRepository_1 = __importDefault(require("../repositories/CriptomoedasRepository"));
 const CreateUpdateCriptomoedaService_1 = __importDefault(require("../services/CreateUpdateCriptomoedaService"));
-const criptomoedasRepository = new CriptomoedasRepository_1.default();
+const { criptomoedasRepository } = require('../loaders/CarregarCriptomoedasRepository');
 class CriptomoedaController {
     create(request, response) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -34,6 +33,18 @@ class CriptomoedaController {
     show(_, response) {
         return __awaiter(this, void 0, void 0, function* () {
             return response.json(criptomoedasRepository.all());
+        });
+    }
+    find(request, response) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { codigo } = request.params;
+            const criptomoeda = criptomoedasRepository.findByCodigo(codigo);
+            if (criptomoeda != null) {
+                return response.status(200).json(criptomoeda);
+            }
+            else {
+                return response.status(404).json({});
+            }
         });
     }
 }

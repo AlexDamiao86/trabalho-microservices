@@ -14,10 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const { Socket } = require('phoenix-channels');
 const { ws_endpoint } = require('../config/index');
+const { criptomoedasRepository } = require('../loaders/CarregarCriptomoedasRepository');
 const CreateUpdateCriptomoedaService_1 = __importDefault(require("../services/CreateUpdateCriptomoedaService"));
-const CriptomoedasRepository_1 = __importDefault(require("../repositories/CriptomoedasRepository"));
-const CarregarDescricaoCriptomoedas_1 = require("./CarregarDescricaoCriptomoedas");
-const criptomoedasRepository = new CriptomoedasRepository_1.default();
+const CarregarDescricaoCriptomoedas_1 = require("../loaders/CarregarDescricaoCriptomoedas");
 class SubscribeTickerService {
     constructor() {
         (0, CarregarDescricaoCriptomoedas_1.CarregarDescricaoCriptomoedas)();

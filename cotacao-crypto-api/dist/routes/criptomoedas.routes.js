@@ -5,5 +5,6 @@ const CriptomoedaController_1 = require("../controllers/CriptomoedaController");
 const criptomoedasRouter = (0, express_1.Router)();
 const criptomoedaController = new CriptomoedaController_1.CriptomoedaController();
 criptomoedasRouter.get('/', criptomoedaController.show);
+criptomoedasRouter.get('/:codigo', criptomoedaController.find);
 criptomoedasRouter.post('/', criptomoedaController.create);
 exports.default = criptomoedasRouter;

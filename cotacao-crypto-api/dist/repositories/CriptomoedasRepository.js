@@ -8,17 +8,29 @@ class CriptomoedasRepository {
     constructor() {
         this.criptomoedas = [];
     }
-    create({ codigo, nome, descricao, cotacao_compra, cotacao_venda, variacao }) {
+    create({ codigo, nome, descricao, cotacao_compra, cotacao_venda, variacao, }) {
         const criptomoeda = new Criptomoeda_1.default({
             codigo,
             nome,
             descricao,
             cotacao_compra,
             cotacao_venda,
-            variacao
+            variacao,
         });
         this.criptomoedas.push(criptomoeda);
         return criptomoeda;
+    }
+    findByCodigo(codigo) {
+        const criptomoedaEncontrada = this.criptomoedas.find(criptomoeda => criptomoeda.getCodigo == codigo.toUpperCase());
+        return criptomoedaEncontrada || null;
+    }
+    updateCripto(criptomoeda, { cotacao_compra, cotacao_venda, variacao }) {
+        const criptomoedaAtualizada = criptomoeda.atualizarCotacao({
+            cotacao_compra,
+            cotacao_venda,
+            variacao,
+        });
+        return criptomoedaAtualizada;
     }
     all() {
         return this.criptomoedas;

@@ -12,5 +12,15 @@ class Criptomoeda {
         this.variacao = variacao;
         this.timestamp_atualizacao = new Date().toISOString();
     }
+    get getCodigo() {
+        return this.codigo;
+    }
+    atualizarCotacao({ cotacao_compra, cotacao_venda, variacao }) {
+        this.cotacao_compra = cotacao_compra;
+        this.cotacao_venda = cotacao_venda;
+        this.variacao = variacao;
+        this.timestamp_atualizacao = new Date().toISOString();
+        return this;
+    }
 }
 exports.default = Criptomoeda;
