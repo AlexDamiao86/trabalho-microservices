@@ -43,10 +43,21 @@ class SubscribeTickerService {
       if (response.success == true) {
         console.log('Evento "price" recebido com sucesso!');
         for (var market in response) {
+          console.log(response[market]);
           if (market != 'success') {
+            // Verifica se cripto teve tratamento de descricao
+            // Se não houve tratamento, inclui no Map de descrição
+            if (!descricaoCriptomoedas.has(market)) {
+              let codigoModificado = market.replace("-BRL", "");
+              descricaoCriptomoedas.set(market, {
+                codigo: codigoModificado,
+                nome: codigoModificado,
+                descricao: codigoModificado
+              });
+            }
+            const { codigo, nome, descricao } = descricaoCriptomoedas.get(market);
             const { buy, sell } = response[market];
-            const { codigo, nome, descricao } =
-              descricaoCriptomoedas.get(market);
+            const variacao = response[market].var;
             const criptomoeda = new CreateUpdateCriptomoedaService(
               criptomoedasRepository,
             ).execute({
@@ -55,7 +66,7 @@ class SubscribeTickerService {
               descricao,
               cotacao_venda: buy,
               cotacao_compra: sell,
-              variacao: response[market].var,
+              variacao
             });
             console.log(criptomoeda);
           }
