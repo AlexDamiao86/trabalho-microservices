@@ -11,8 +11,6 @@ app.listen(port, () => {
   console.log('Server has started on port ', port)
 });
 
-async function subscribeTicker() {
+setTimeout(() => {
   SubscribeTickerService.execute();
-}
-
-subscribeTicker();
+}, 1000);

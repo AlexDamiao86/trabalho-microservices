@@ -23,6 +23,16 @@ class CriptomoedaController {
   async show(_: Request, response: Response) {
     return response.json(criptomoedasRepository.all());
   }
+
+  async find(request: Request, response: Response) {
+    const { codigo } = request.params;
+    const criptomoeda = criptomoedasRepository.findByCodigo(codigo);
+    if (criptomoeda != null) {
+      return response.status(200).json(criptomoeda);
+    } else {
+      return response.status(404).json({});
+    }
+  }
 }
 
 export { CriptomoedaController };

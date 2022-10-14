@@ -28,6 +28,13 @@ class CriptomoedasRepository {
     return criptomoeda;
   }
 
+  public findByCodigo(codigo: string): Criptomoeda | null {
+    const criptomoedaEncontrada = this.criptomoedas.find(
+      criptomoeda => criptomoeda.codigo == codigo
+    );
+    return criptomoedaEncontrada || null;
+  }
+
   public all(): Criptomoeda[] {
     return this.criptomoedas;
   }
