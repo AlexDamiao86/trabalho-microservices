@@ -10,7 +10,7 @@ class CreateUpdateCriptomoedaService {
         if (criptomoedaExistente) {
             // Atualizar criptomoeda
             const criptomoedaAtualizada = this.criptomoedasRepository.updateCripto(criptomoedaExistente, { cotacao_compra, cotacao_venda, variacao });
-            console.log('Atualizou criptomoeda\n');
+            console.log('Atualizou criptomoeda');
             return criptomoedaAtualizada;
         }
         else {
@@ -23,7 +23,7 @@ class CreateUpdateCriptomoedaService {
                 cotacao_venda,
                 variacao
             });
-            console.log('Criou criptomoeda\n');
+            console.log('Criou criptomoeda');
             return criptomoeda;
         }
     }

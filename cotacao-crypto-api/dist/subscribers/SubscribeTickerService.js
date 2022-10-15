@@ -15,11 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { Socket } = require('phoenix-channels');
 const { ws_endpoint } = require('../config/index');
 const { criptomoedasRepository } = require('../loaders/CarregarCriptomoedasRepository');
+const { descricaoCriptomoedas } = require('../loaders/CarregarDescricaoCriptomoedas');
 const CreateUpdateCriptomoedaService_1 = __importDefault(require("../services/CreateUpdateCriptomoedaService"));
-const CarregarDescricaoCriptomoedas_1 = require("../loaders/CarregarDescricaoCriptomoedas");
 class SubscribeTickerService {
     constructor() {
-        (0, CarregarDescricaoCriptomoedas_1.CarregarDescricaoCriptomoedas)();
         this.socket = new Socket(`${ws_endpoint}/orderbook/socket`);
     }
     execute() {
@@ -46,16 +45,28 @@ class SubscribeTickerService {
                 if (response.success == true) {
                     console.log('Evento "price" recebido com sucesso!');
                     for (var market in response) {
+                        console.log(response[market]);
                         if (market != 'success') {
+                            // Verifica se cripto teve tratamento de descricao
+                            // Se não houve tratamento, inclui no Map de descrição
+                            if (!descricaoCriptomoedas.has(market)) {
+                                let codigoModificado = market.replace("-BRL", "");
+                                descricaoCriptomoedas.set(market, {
+                                    codigo: codigoModificado,
+                                    nome: codigoModificado,
+                                    descricao: codigoModificado
+                                });
+                            }
+                            const { codigo, nome, descricao } = descricaoCriptomoedas.get(market);
                             const { buy, sell } = response[market];
-                            const { codigo, nome, descricao } = CarregarDescricaoCriptomoedas_1.descricaoCriptomoedas.get(market);
+                            const variacao = response[market].var;
                             const criptomoeda = new CreateUpdateCriptomoedaService_1.default(criptomoedasRepository).execute({
                                 codigo,
                                 nome,
                                 descricao,
                                 cotacao_venda: buy,
                                 cotacao_compra: sell,
-                                variacao: response[market].var,
+                                variacao
                             });
                             console.log(criptomoeda);
                         }
