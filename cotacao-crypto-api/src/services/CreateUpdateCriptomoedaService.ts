@@ -22,7 +22,7 @@ export class CreateUpdateCriptomoedaService {
 
     if (criptomoedaExistente) {
       // Atualizar criptomoeda
-      const criptomoedaAtualizada = this.criptomoedasRepository.updateCripto(
+      const criptomoedaAtualizada = this.criptomoedasRepository.update(
           criptomoedaExistente,
           {cotacao_compra, cotacao_venda, variacao}
         );

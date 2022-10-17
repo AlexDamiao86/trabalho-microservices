@@ -20,7 +20,15 @@ class CriptomoedaController {
   }
 
   async show(_: Request, response: Response) {
-    return response.json(criptomoedasRepository.all());
+    return response.status(200).json(criptomoedasRepository.all());
+  }
+
+  async destroy(request: Request, response: Response) {
+    const { codigo } = request.params;
+    if (criptomoedasRepository.delete(codigo)) {
+      return response.status(204).json();
+    }
+    return response.status(404).json();
   }
 
   async find(request: Request, response: Response) {

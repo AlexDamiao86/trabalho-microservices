@@ -37,7 +37,7 @@ class CriptomoedasRepository {
     return criptomoedaEncontrada || null;
   }
 
-  public updateCripto(
+  public update(
     criptomoeda: Criptomoeda,
     { cotacao_compra, cotacao_venda, variacao }: UpdateCriptomoedaDTO,
   ): Criptomoeda {
@@ -47,6 +47,19 @@ class CriptomoedasRepository {
       variacao,
     });
     return criptomoedaAtualizada;
+  }
+
+  public delete(codigo: string): boolean {
+    const indexCripto = this.criptomoedas.findIndex(
+      criptomoeda => {
+        return criptomoeda.getCodigo === codigo.toUpperCase();
+      }
+    )
+    if (indexCripto != -1) {
+      this.criptomoedas.splice(indexCripto, 1);
+      return true;
+    }
+    return false;
   }
 
   public all(): Criptomoeda[] {
