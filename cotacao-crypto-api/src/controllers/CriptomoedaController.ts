@@ -1,44 +1,42 @@
-import { Request, Response } from 'express';
+import { Body, Path, Get, Post, Delete, Route } from 'tsoa';
+import { CreateCriptomoedaDTO } from '../dto/CreateCriptomoedaRequestDTO';
+import { CriptomoedaDTO } from '../dto/CriptomoedaDTO';
 import CreateUpdateCriptomoedaService from "../services/CreateUpdateCriptomoedaService";
 
 const { criptomoedasRepository } = require('../loaders/CarregarCriptomoedasRepository');
 
+@Route("criptomoedas")
 class CriptomoedaController {
-  async create(request: Request, response: Response) {
-    const { codigo, nome, descricao } = request.body;
-    const criptomoeda = new CreateUpdateCriptomoedaService(
+
+  @Get("/")
+  public async show(): Promise<CriptomoedaDTO[]> {
+    return criptomoedasRepository.all();
+  }
+
+  @Get("/:codigo")
+  public async find(@Path() codigo: string): Promise<CriptomoedaDTO | null> {
+    return criptomoedasRepository.findByCodigo(codigo);
+  }
+
+  @Post("/")
+  public async create(@Body() requestBody: CreateCriptomoedaDTO): Promise<CriptomoedaDTO> {
+    const { codigo, nome, descricao, cotacao_compra, cotacao_venda, variacao } = requestBody;
+    const novaCriptomoeda = new CreateUpdateCriptomoedaService(
       criptomoedasRepository,
     ).execute({
       codigo,
       nome,
       descricao,
-      cotacao_compra: 0.0,
-      cotacao_venda: 0.0,
-      variacao: 0.0
+      cotacao_compra,
+      cotacao_venda,
+      variacao
     });
-    return response.status(201).json(criptomoeda);
+    return novaCriptomoeda as unknown as CriptomoedaDTO;
   }
 
-  async show(_: Request, response: Response) {
-    return response.status(200).json(criptomoedasRepository.all());
-  }
-
-  async destroy(request: Request, response: Response) {
-    const { codigo } = request.params;
-    if (criptomoedasRepository.delete(codigo)) {
-      return response.status(204).json();
-    }
-    return response.status(404).json();
-  }
-
-  async find(request: Request, response: Response) {
-    const { codigo } = request.params;
-    const criptomoeda = criptomoedasRepository.findByCodigo(codigo);
-    if (criptomoeda != null) {
-      return response.status(200).json(criptomoeda);
-    } else {
-      return response.status(404).json({});
-    }
+  @Delete("/:codigo")
+  public async destroy(@Path() codigo: string): Promise<boolean> {
+    return criptomoedasRepository.delete(codigo);
   }
 }
 

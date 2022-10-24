@@ -18,7 +18,7 @@ class CriptomoedasRepository {
     variacao,
   }: CreateCriptomoedaDTO): Criptomoeda {
     const criptomoeda = new Criptomoeda({
-      codigo,
+      codigo: codigo.toUpperCase(),
       nome,
       descricao,
       cotacao_compra,

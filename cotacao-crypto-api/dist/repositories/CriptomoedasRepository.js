@@ -10,7 +10,7 @@ class CriptomoedasRepository {
     }
     create({ codigo, nome, descricao, cotacao_compra, cotacao_venda, variacao, }) {
         const criptomoeda = new Criptomoeda_1.default({
-            codigo,
+            codigo: codigo.toUpperCase(),
             nome,
             descricao,
             cotacao_compra,
@@ -24,13 +24,23 @@ class CriptomoedasRepository {
         const criptomoedaEncontrada = this.criptomoedas.find(criptomoeda => criptomoeda.getCodigo == codigo.toUpperCase());
         return criptomoedaEncontrada || null;
     }
-    updateCripto(criptomoeda, { cotacao_compra, cotacao_venda, variacao }) {
+    update(criptomoeda, { cotacao_compra, cotacao_venda, variacao }) {
         const criptomoedaAtualizada = criptomoeda.atualizarCotacao({
             cotacao_compra,
             cotacao_venda,
             variacao,
         });
         return criptomoedaAtualizada;
+    }
+    delete(codigo) {
+        const indexCripto = this.criptomoedas.findIndex(criptomoeda => {
+            return criptomoeda.getCodigo === codigo.toUpperCase();
+        });
+        if (indexCripto != -1) {
+            this.criptomoedas.splice(indexCripto, 1);
+            return true;
+        }
+        return false;
     }
     all() {
         return this.criptomoedas;
