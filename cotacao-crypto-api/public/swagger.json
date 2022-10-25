@@ -83,6 +83,60 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"UpdateCriptomoedaDTO": {
+				"properties": {
+					"nome": {
+						"type": "string"
+					},
+					"descricao": {
+						"type": "string"
+					},
+					"cotacao_compra": {
+						"type": "number",
+						"format": "double"
+					},
+					"cotacao_venda": {
+						"type": "number",
+						"format": "double"
+					},
+					"variacao": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"nome",
+					"descricao",
+					"cotacao_compra",
+					"cotacao_venda",
+					"variacao"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateCotacaoCriptomoedaDTO": {
+				"properties": {
+					"cotacao_compra": {
+						"type": "number",
+						"format": "double"
+					},
+					"cotacao_venda": {
+						"type": "number",
+						"format": "double"
+					},
+					"variacao": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"cotacao_compra",
+					"cotacao_venda",
+					"variacao"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -203,6 +257,88 @@
 						}
 					}
 				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/CriptomoedaDTO"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "codigo",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateCriptomoedaDTO"
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"operationId": "UpdateCotacao",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/CriptomoedaDTO"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "codigo",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateCotacaoCriptomoedaDTO"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

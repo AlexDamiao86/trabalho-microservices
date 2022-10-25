@@ -12,8 +12,8 @@ criptomoedasRouter.get('/', async (_req, res) => {
 criptomoedasRouter.get('/:codigo', async (req, res) => {
   const response = await criptomoedaController.find(req.params.codigo);
   return (response != null) ?
-      res.status(200).json(response) :
-      res.status(404).send();
+    res.status(200).json(response) :
+    res.status(404).send();
 });
 criptomoedasRouter.post('/', async (req, res) => {
   const response = await criptomoedaController.create(req.body);
@@ -22,6 +22,18 @@ criptomoedasRouter.post('/', async (req, res) => {
 criptomoedasRouter.delete('/:codigo', async (req, res) => {
   return (await criptomoedaController.destroy(req.params.codigo)) ?
     res.status(204).send() :
+    res.status(404).send();
+});
+criptomoedasRouter.put('/:codigo', async (req, res) => {
+  const response = await criptomoedaController.update(req.params.codigo, req.body);
+  return (response != null) ?
+    res.status(200).json(response) :
+    res.status(404).send();
+});
+criptomoedasRouter.patch('/:codigo', async (req, res) => {
+  const response = await criptomoedaController.updateCotacao(req.params.codigo, req.body);
+  return (response != null) ?
+    res.status(200).json(response) :
     res.status(404).send();
 });
 

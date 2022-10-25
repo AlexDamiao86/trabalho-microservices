@@ -1,5 +1,6 @@
 import { CreateCriptomoedaDTO } from '../dto/CreateCriptomoedaRequestDTO';
 import { UpdateCriptomoedaDTO } from '../dto/UpdateCriptomoedaRequestDTO';
+import { UpdateCotacaoCriptomoedaDTO } from '../dto/UpdateCotacaoCriptomoedaRequestDTO';
 import Criptomoeda from '../models/Criptomoeda';
 
 class CriptomoedasRepository {
@@ -39,7 +40,21 @@ class CriptomoedasRepository {
 
   public update(
     criptomoeda: Criptomoeda,
-    { cotacao_compra, cotacao_venda, variacao }: UpdateCriptomoedaDTO,
+    { nome, descricao, cotacao_compra, cotacao_venda, variacao }: UpdateCriptomoedaDTO
+  ): Criptomoeda {
+    const criptomoedaAtualizada = criptomoeda.atualizarCriptomoeda({
+      nome,
+      descricao,
+      cotacao_compra,
+      cotacao_venda,
+      variacao
+    });
+    return criptomoedaAtualizada;
+  }
+
+  public updateCotacao(
+    criptomoeda: Criptomoeda,
+    { cotacao_compra, cotacao_venda, variacao }: UpdateCotacaoCriptomoedaDTO,
   ): Criptomoeda {
     const criptomoedaAtualizada = criptomoeda.atualizarCotacao({
       cotacao_compra,

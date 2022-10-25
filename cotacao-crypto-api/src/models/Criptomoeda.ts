@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { CreateCriptomoedaDTO } from '../dto/CreateCriptomoedaRequestDTO';
 import { UpdateCriptomoedaDTO } from '../dto/UpdateCriptomoedaRequestDTO';
+import { UpdateCotacaoCriptomoedaDTO } from '../dto/UpdateCotacaoCriptomoedaRequestDTO';
 
 class Criptomoeda {
   private id: string;
@@ -34,11 +35,24 @@ class Criptomoeda {
     return this.codigo;
   }
 
-  public atualizarCotacao({
+  public atualizarCriptomoeda({
+    nome,
+    descricao,
     cotacao_compra,
     cotacao_venda,
     variacao
   }: UpdateCriptomoedaDTO): Criptomoeda {
+    this.nome = nome;
+    this.descricao = descricao;
+    this.atualizarCotacao({cotacao_compra, cotacao_venda, variacao});
+    return this;
+  }
+
+  public atualizarCotacao({
+    cotacao_compra,
+    cotacao_venda,
+    variacao
+  }: UpdateCotacaoCriptomoedaDTO): Criptomoeda {
     this.cotacao_compra = cotacao_compra;
     this.cotacao_venda = cotacao_venda;
     this.variacao = variacao;
