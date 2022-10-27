@@ -32,4 +32,16 @@ criptomoedasRouter.delete('/:codigo', (req, res) => __awaiter(void 0, void 0, vo
         res.status(204).send() :
         res.status(404).send();
 }));
+criptomoedasRouter.put('/:codigo', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield criptomoedaController.update(req.params.codigo, req.body);
+    return (response != null) ?
+        res.status(200).json(response) :
+        res.status(404).send();
+}));
+criptomoedasRouter.patch('/:codigo', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield criptomoedaController.updateCotacao(req.params.codigo, req.body);
+    return (response != null) ?
+        res.status(200).json(response) :
+        res.status(404).send();
+}));
 exports.default = criptomoedasRouter;

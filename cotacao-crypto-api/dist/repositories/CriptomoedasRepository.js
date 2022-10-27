@@ -24,7 +24,17 @@ class CriptomoedasRepository {
         const criptomoedaEncontrada = this.criptomoedas.find(criptomoeda => criptomoeda.getCodigo == codigo.toUpperCase());
         return criptomoedaEncontrada || null;
     }
-    update(criptomoeda, { cotacao_compra, cotacao_venda, variacao }) {
+    update(criptomoeda, { nome, descricao, cotacao_compra, cotacao_venda, variacao }) {
+        const criptomoedaAtualizada = criptomoeda.atualizarCriptomoeda({
+            nome,
+            descricao,
+            cotacao_compra,
+            cotacao_venda,
+            variacao
+        });
+        return criptomoedaAtualizada;
+    }
+    updateCotacao(criptomoeda, { cotacao_compra, cotacao_venda, variacao }) {
         const criptomoedaAtualizada = criptomoeda.atualizarCotacao({
             cotacao_compra,
             cotacao_venda,

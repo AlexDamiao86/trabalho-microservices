@@ -8,7 +8,9 @@ const routes_1 = __importDefault(require("./routes"));
 const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+require("express-async-errors");
 const SubscribeTickerService_1 = __importDefault(require("./subscribers/SubscribeTickerService"));
+const AppError_1 = require("./errors/AppError");
 const { port } = require('./config/index');
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -21,8 +23,18 @@ app.use("/docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.defaul
         url: "/swagger.json",
     },
 }));
+app.use((err, request, response, _next) => {
+    if (err instanceof AppError_1.AppError) {
+        return response.status(err.status).json({
+            message: err.message
+        });
+    }
+    return response.status(500).json({
+        message: `Erro interno do servidor ${err.message}`
+    });
+});
 app.listen(port, () => {
-    console.log('Server has started on port ', port);
+    console.log('Servidor iniciado na porta ', port);
 });
 setTimeout(() => {
     SubscribeTickerService_1.default.execute();

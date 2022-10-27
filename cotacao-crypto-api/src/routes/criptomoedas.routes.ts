@@ -16,8 +16,14 @@ criptomoedasRouter.get('/:codigo', async (req, res) => {
     res.status(404).send();
 });
 criptomoedasRouter.post('/', async (req, res) => {
-  const response = await criptomoedaController.create(req.body);
-  return res.status(201).send(response);
+  try {
+    // const response = await criptomoedaController.create(req.body).catch(e => { console.log(e); throw(e) });
+    const response = await criptomoedaController.create(req.body)
+    return res.status(201).send(response);
+  } catch(e) {
+    console.log(e);
+    throw(e)
+  }
 });
 criptomoedasRouter.delete('/:codigo', async (req, res) => {
   return (await criptomoedaController.destroy(req.params.codigo)) ?

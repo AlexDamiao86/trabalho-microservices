@@ -175,8 +175,8 @@
 			"post": {
 				"operationId": "Create",
 				"responses": {
-					"200": {
-						"description": "Ok",
+					"201": {
+						"description": "Created",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -235,8 +235,8 @@
 			"delete": {
 				"operationId": "Destroy",
 				"responses": {
-					"200": {
-						"description": "Ok",
+					"204": {
+						"description": "Deleted",
 						"content": {
 							"application/json": {
 								"schema": {
