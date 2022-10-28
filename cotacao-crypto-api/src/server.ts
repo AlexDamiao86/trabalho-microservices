@@ -1,12 +1,12 @@
-import express, { Request, NextFunction, Response, urlencoded } from 'express';
+import express, { Response, Request, urlencoded, NextFunction } from 'express';
 import routes from './routes';
 import morgan from 'morgan';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import 'express-async-errors';
-import { RegisterRoutes } from '../public/routes';
+import { RegisterRoutes } from '../build/routes';
 import SubscribeTickerService from './subscribers/SubscribeTickerService';
-import { AppError } from './errors/AppError';
+import { ValidateError } from 'tsoa';
 
 const { port } = require('./config/index');
 
@@ -16,14 +16,12 @@ app.use(cors());
 app.use(morgan("tiny"));
 app.use(express.static("public"));
 app.use(routes);
-app.use(
-  "/docs",
-  swaggerUi.serve,
-  swaggerUi.setup(undefined, {
-    swaggerOptions: {
-      url: "/swagger.json",
-    },
-  })
+app.use("/docs", swaggerUi.serve,
+  async (_req: Request, res: Response) => {
+    return res.send(
+      swaggerUi.generateHTML(await import("../build/swagger.json"))
+    )
+  }
 );
 
 app.use(
@@ -32,21 +30,34 @@ app.use(
   })
 );
 
-
-app.use((err: Error, request: Request, response: Response, _next: NextFunction) => {
-  if(err instanceof AppError) {
-    return response.status(err.status).json({
-      message: err.message
-    })
-  }
-  return response.status(500).json({
-    message: `Erro interno do servidor ${err.message}`
-  });
-}
-
-);
-
 RegisterRoutes(app);
+
+app.use(function notFoundHandler(_req, res: Response) {
+  res.status(404).send({
+    message: "Página não encontrada",
+  });
+});
+
+app.use(function errorHandler(
+  err: unknown,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Response | void {
+  if (err instanceof ValidateError) {
+    console.warn(`Erro de validação para ${req.path}:`, err.fields);
+    return res.status(422).json({
+      message: "Erro de validação",
+      details: err?.fields,
+    });
+  }
+  if (err instanceof Error) {
+    return res.status(500).json({
+      message: "Erro interno do servidor",
+    });
+  }
+  next();
+});
 
 app.listen(port, () => {
   console.log('Servidor iniciado na porta ', port)

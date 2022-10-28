@@ -3,11 +3,11 @@
   "noImplicitAdditionalProperties": "throw-on-extras",
   "controllerPathGlobs": ["src/**/*Controller.ts"],
   "spec": {
-    "outputDirectory": "public",
+    "outputDirectory": "build",
     "specVersion": 3
   },
   "ignore": ["**/node_modules/**"],
   "routes": {
-    "routesDir": "public"
+    "routesDir": "build"
   }
 }

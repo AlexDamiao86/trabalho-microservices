@@ -31,7 +31,6 @@ class CriptomoedasRepository {
   }
 
   public findByCodigo(codigo: string): Criptomoeda | null {
-
     const criptomoedaEncontrada = this.criptomoedas.find(
       criptomoeda => criptomoeda.getCodigo == codigo.toUpperCase(),
     );
