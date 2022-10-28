@@ -31,8 +31,36 @@ class Criptomoeda {
     this.timestamp_atualizacao = new Date().toISOString();
   }
 
+  public get getId(): string {
+    return this.id;
+  }
+
   public get getCodigo(): string {
     return this.codigo;
+  }
+
+  public get getNome(): string {
+    return this.nome;
+  }
+
+  public get getDescricao(): string {
+    return this.descricao;
+  }
+
+  public get getCotacaoCompra(): number {
+    return this.cotacao_compra;
+  }
+
+  public get getCotacaoVenda(): number {
+    return this.cotacao_venda;
+  }
+
+  public get getVariacao(): number {
+    return this.variacao;
+  }
+
+  public get getTimestampAtualizacao(): string {
+    return this.timestamp_atualizacao;
   }
 
   public atualizarCriptomoeda({
