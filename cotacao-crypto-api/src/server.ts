@@ -34,7 +34,7 @@ RegisterRoutes(app);
 
 app.use(function notFoundHandler(_req, res: Response) {
   res.status(404).send({
-    message: "Página não encontrada",
+    mensagem: "Página não encontrada",
   });
 });
 
@@ -47,13 +47,13 @@ app.use(function errorHandler(
   if (err instanceof ValidateError) {
     console.warn(`Erro de validação para ${req.path}:`, err.fields);
     return res.status(422).json({
-      message: "Erro de validação",
-      details: err?.fields,
+      mensagem: "Erro de validação",
+      detalhes: err?.fields,
     });
   }
   if (err instanceof Error) {
     return res.status(500).json({
-      message: "Erro interno do servidor",
+      mensagem: "Erro interno no servidor. Verifique se requisição está correta.",
     });
   }
   next();

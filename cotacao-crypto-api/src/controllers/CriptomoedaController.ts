@@ -33,11 +33,11 @@ export class CriptomoedaController extends Controller {
   @Get('{codigo}')
   public async execute(
     @Path() codigo: string,
-    @Res() notFoundResponse: TsoaResponse< 404, { reason: string; }>,
+    @Res() notFoundResponse: TsoaResponse< 404, { motivo: string; }>,
   ): Promise<CriptomoedaDTO | null> {
     return criptomoedasRepository.findByCodigo(codigo) != null
       ? criptomoedasRepository.findByCodigo(codigo)
-      : notFoundResponse(404, { reason: 'Criptomoeda não encontrada' });
+      : notFoundResponse(404, { motivo: 'Criptomoeda não encontrada' });
   }
 
   /**
@@ -46,12 +46,12 @@ export class CriptomoedaController extends Controller {
    * @summary Cria criptomoeda
    * @returns Criptomoeda criada.
    */
-  @Response<ValidateErrorJSON>(422, 'Validation Failed')
+  @Response<ValidateErrorJSON>(422, 'Requisição inválida')
   @SuccessResponse('201', 'Criptomoeda criada')
   @Post('/')
   public async create(
     @Body() requestBody: CreateCriptomoedaDTO,
-    @Res() notFoundResponse: TsoaResponse< 404, { reason: string; }>,
+    @Res() notFoundResponse: TsoaResponse< 406, { motivo: string; }>,
   ): Promise<CriptomoedaDTO> {
     this.setStatus(201);
     const { codigo, nome, descricao, cotacao_compra, cotacao_venda, variacao } =
@@ -60,7 +60,7 @@ export class CriptomoedaController extends Controller {
     const criptomoedaExistente = criptomoedasRepository.findByCodigo(codigo);
 
     if (criptomoedaExistente) {
-      return notFoundResponse(404, { reason: 'Criptomoeda existente. Utilize a opção de alterar (PUT)' });
+      return notFoundResponse(406, { motivo: 'Criptomoeda existente. Utilize a opção de alterar (PUT)' });
     }
 
     const novaCriptomoeda = criptomoedasRepository.create({
@@ -79,18 +79,20 @@ export class CriptomoedaController extends Controller {
    * Exclui determinada criptomoeda através de seu código.
    * @param codigo Código de criptomoeda. Exemplo: USDT.
    * @summary Excluir criptomoeda
-   * @returns Devolve true em caso de criptomoeda excluída com sucesso.
+   * @returns Devolve 204 em caso de criptomoeda excluída com sucesso.
    */
   @Delete('/:codigo')
+  @SuccessResponse('204', 'Criptomoeda excluída')
   public async destroy(
     @Path() codigo: string,
-    @Res() notFoundResponse: TsoaResponse< 404, { reason: string; }>,
-  ): Promise<boolean> {
+    @Res() notFoundResponse: TsoaResponse< 404, { motivo: string; }>,
+  ): Promise<void> {
+    this.setStatus(204);
     const criptomoedaExistente = criptomoedasRepository.findByCodigo(codigo);
     if (!criptomoedaExistente) {
-      return notFoundResponse(404, { reason: 'Criptomoeda não existe. Utilize a opção de criar (POST)' });
+      return notFoundResponse(404, { motivo: 'Criptomoeda não existe. Utilize a opção de criar (POST)' });
     }
-    return criptomoedasRepository.delete(codigo);
+    criptomoedasRepository.delete(codigo);
   }
 
   /**
@@ -100,12 +102,12 @@ export class CriptomoedaController extends Controller {
    * @summary Atualiza criptomoeda
    * @returns Criptomoeda alterada.
    */
-  @Response<ValidateErrorJSON>(422, 'Validation Failed')
+  @Response<ValidateErrorJSON>(422, 'Requisição inválida')
   @Put('/:codigo')
   public async update(
     @Path() codigo: string,
     @Body() requestBody: UpdateCriptomoedaDTO,
-    @Res() notFoundResponse: TsoaResponse< 404, { reason: string; }>,
+    @Res() notFoundResponse: TsoaResponse< 404, { motivo: string; }>,
   ): Promise<CriptomoedaDTO | null> {
     const { nome, descricao, cotacao_compra, cotacao_venda, variacao } =
       requestBody;
@@ -113,7 +115,7 @@ export class CriptomoedaController extends Controller {
     const criptomoedaExistente = criptomoedasRepository.findByCodigo(codigo);
 
     if (!criptomoedaExistente) {
-      return notFoundResponse(404, { reason: 'Criptomoeda não existe. Utilize a opção de criar (POST)' });
+      return notFoundResponse(404, { motivo: 'Criptomoeda não existe. Utilize a opção de criar (POST)' });
     }
 
     return criptomoedasRepository.update(criptomoedaExistente, {
@@ -128,23 +130,23 @@ export class CriptomoedaController extends Controller {
   /**
    * Atualiza cotação de determinada criptomoeda através de seu código.
    * @param codigo Código de criptomoeda. Exemplo: USDT.
-   * @param requestBody Dados de criptomoeda como nome, descricao, cotação.
-   * @summary Atualiza cotação criptomoeda
+   * @param requestBody Dados de cotação da criptomoeda: Cotação de Compra, Cotação de Venda e Variação.
+   * @summary Atualiza cotação criptomoeda informada.
    * @returns Criptomoeda alterada.
    */
-  @Response<ValidateErrorJSON>(422, 'Validation Failed')
+  @Response<ValidateErrorJSON>(422, 'Requisição inválida')
   @Patch('{codigo}')
   public async updateCotacao(
     @Path() codigo: string,
     @Body() requestBody: UpdateCotacaoCriptomoedaDTO,
-    @Res() notFoundResponse: TsoaResponse< 404, { reason: string; }>,
+    @Res() notFoundResponse: TsoaResponse< 404, { motivo: string; }>,
   ): Promise<CriptomoedaDTO | null> {
     const { cotacao_compra, cotacao_venda, variacao } = requestBody;
 
     const criptomoedaExistente = criptomoedasRepository.findByCodigo(codigo);
 
     if (!criptomoedaExistente) {
-      return notFoundResponse(404, { reason: 'Criptomoeda não existe. Utilize a opção de criar (POST)' });
+      return notFoundResponse(404, { motivo: 'Criptomoeda não existe. Utilize a opção de criar (POST)' });
     }
 
     return criptomoedasRepository.updateCotacao(criptomoedaExistente, {
