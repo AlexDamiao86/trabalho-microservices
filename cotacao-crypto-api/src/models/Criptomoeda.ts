@@ -24,10 +24,10 @@ class Criptomoeda {
     this.id = uuid();
     this.codigo = codigo;
     this.nome = nome;
-    this.descricao = descricao;
-    this.cotacao_compra = cotacao_compra;
-    this.cotacao_venda = cotacao_venda;
-    this.variacao = variacao;
+    this.descricao = descricao!;
+    this.cotacao_compra = cotacao_compra!;
+    this.cotacao_venda = cotacao_venda!;
+    this.variacao = variacao!;
     this.timestamp_atualizacao = new Date().toISOString();
   }
 
@@ -71,8 +71,11 @@ class Criptomoeda {
     variacao
   }: UpdateCriptomoedaDTO): Criptomoeda {
     this.nome = nome;
-    this.descricao = descricao;
-    this.atualizarCotacao({cotacao_compra, cotacao_venda, variacao});
+    this.descricao = descricao!;
+    const cotacao_compra_null: number = cotacao_compra ?? 0;
+    const cotacao_venda_null: number = cotacao_venda ?? 0;
+    const variacao_null: number = variacao ?? 0;
+    this.atualizarCotacao({cotacao_compra: cotacao_compra_null, cotacao_venda: cotacao_venda_null, variacao: variacao_null});
     return this;
   }
 
@@ -83,7 +86,7 @@ class Criptomoeda {
   }: UpdateCotacaoCriptomoedaDTO): Criptomoeda {
     this.cotacao_compra = cotacao_compra;
     this.cotacao_venda = cotacao_venda;
-    this.variacao = variacao;
+    this.variacao = variacao!;
     this.timestamp_atualizacao = new Date().toISOString();
     return this;
   }
