@@ -5,10 +5,10 @@
   "main": "build/src/server.js",
   "license": "MIT",
   "scripts": {
-    "prebuild": "yarn swagger",
+    "prebuild": "npm run swagger",
     "build": "tsc",
     "start": "ts-node src/server.ts",
-    "predev": "yarn swagger",
+    "predev": "npm run swagger",
     "dev": "concurrently \"ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/server.ts\" \"tsoa spec-and-routes\"",
     "swagger": "tsoa spec-and-routes"
   },

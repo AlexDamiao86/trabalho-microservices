@@ -1,20 +1,22 @@
-FROM node:14.18.0-alpine AS builder
+FROM registry.access.redhat.com/ubi8/nodejs-16:latest AS builder
+
+USER 0
 
 WORKDIR /usr/src/app
 
-COPY package.json tsconfig.json yarn.lock ./
+COPY package.json tsconfig.json ./
 
 COPY . .
 
-RUN yarn install && yarn build
+RUN npm install && npm run build
 
-FROM node:14.18.0-alpine
+FROM registry.access.redhat.com/ubi8/nodejs-16-minimal:latest
 
 WORKDIR /usr/src/app
 
-COPY package.json yarn.lock ./
+COPY package.json ./
 
-RUN yarn install --only=production
+RUN npm install
 
 COPY --from=builder /usr/src/app/build ./build
 

@@ -8,8 +8,9 @@ Após clonar o código do repositório GitHub:
 
 ```bash
 cd cotacao-crypto-api
-yarn install
-yarn start
+npm install
+npm run build
+npm run dev
 ```
 
 ### 2. Docker
