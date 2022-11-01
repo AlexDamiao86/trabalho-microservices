@@ -63,7 +63,7 @@ class CriptomoedasRepository {
     return criptomoedaAtualizada;
   }
 
-  public delete(codigo: string): boolean {
+  public delete(codigo: string): void {
     const indexCripto = this.criptomoedas.findIndex(
       criptomoeda => {
         return criptomoeda.getCodigo === codigo.toUpperCase();
@@ -71,9 +71,7 @@ class CriptomoedasRepository {
     )
     if (indexCripto != -1) {
       this.criptomoedas.splice(indexCripto, 1);
-      return true;
     }
-    return false;
   }
 
   public all(): Criptomoeda[] {

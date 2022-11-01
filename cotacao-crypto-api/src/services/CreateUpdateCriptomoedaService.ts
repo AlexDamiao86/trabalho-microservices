@@ -26,7 +26,7 @@ export class CreateUpdateCriptomoedaService {
         criptomoedaExistente,
         { nome, descricao, cotacao_compra, cotacao_venda, variacao },
       );
-      console.log('Atualizou criptomoeda');
+      console.info('Atualizou criptomoeda');
       return criptomoedaAtualizada;
     } else {
       // Criar criptomoeda
@@ -38,7 +38,7 @@ export class CreateUpdateCriptomoedaService {
         cotacao_venda,
         variacao,
       });
-      console.log('Criou criptomoeda');
+      console.info('Criou criptomoeda');
       return criptomoeda;
     }
   }
