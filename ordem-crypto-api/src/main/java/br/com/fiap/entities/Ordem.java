@@ -20,15 +20,15 @@ import java.util.UUID;
 @Getter
 public class Ordem extends PanacheEntityBase {
 
-//    public Ordem(UUID id, CreateOrdemDTO ordemDTO) {
-//        this.id = id;
-//        this.tipo = ordemDTO.getTipo();
-//        this.codigoCriptomoeda = ordemDTO.getCodigoCriptomoeda();
-//        this.precoUnitarioCriptomoeda = new BigDecimal(ordemDTO.getPrecoUnitarioCriptomoeda());
-//        this.quantidadeCriptomoeda = new BigDecimal(ordemDTO.getQuantidadeCriptomoeda());
-//        this.valor = precoUnitarioCriptomoeda.multiply(quantidadeCriptomoeda);
-//        this.situacao = SituacaoOrdem.RECEBIDA;
-//    }
+    public Ordem(UUID id, CreateOrdemDTO ordemDTO) {
+        this.id = id;
+        this.tipo = ordemDTO.getTipo();
+        this.codigoCriptomoeda = ordemDTO.getCodigoCriptomoeda();
+        this.precoUnitarioCriptomoeda = new BigDecimal(ordemDTO.getPrecoUnitarioCriptomoeda());
+        this.quantidadeCriptomoeda = new BigDecimal(ordemDTO.getQuantidadeCriptomoeda());
+        this.valor = precoUnitarioCriptomoeda.multiply(quantidadeCriptomoeda);
+        this.situacao = SituacaoOrdem.RECEBIDA;
+    }
 
     @Id @Setter
     private UUID id;

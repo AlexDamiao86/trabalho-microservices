@@ -2,6 +2,7 @@ package br.com.fiap.resources;
 
 import br.com.fiap.dto.CreateOrdemDTO;
 import br.com.fiap.entities.Ordem;
+import br.com.fiap.enums.TipoOrdem;
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
@@ -33,21 +34,20 @@ public class OrdemResource {
     }
 
     @POST
-    public Uni<Response> create(Ordem ordem) {
-        if (ordem == null || ordem.getId() != null)
-            throw new WebApplicationException("Id não deve ser informado. Alterar requisição.", 422);
-        // if (ordemDTO.getCodigoCriptomoeda() == null)
-        //  throw new WebApplicationException("Codigo da criptomoeda não informada. Favor verificar dados de requisição.", 422);
+    public Uni<Response> create(CreateOrdemDTO ordemDTO) {
+        if (ordemDTO == null)
+            throw new WebApplicationException("Informar ordem na requisição. Favor verificar requisição. ", 422);
+        if (ordemDTO.getCodigoCriptomoeda() == null)
+            throw new WebApplicationException("Codigo da criptomoeda não informada. Favor verificar requisição.", 422);
 
-        LOGGER.info(ordem.getTipo());
-        LOGGER.info(ordem.getCodigoCriptomoeda());
+        LOGGER.info(ordemDTO.getTipo());
+        LOGGER.info(ordemDTO.getCodigoCriptomoeda());
 
         UUID uuid = UUID.randomUUID();
         ordemRecebidaEmitter.send(uuid.toString());
         LOGGER.info("Evento 'ordem-recebida' enviado: " + uuid.toString());
 
-        ordem.setId(uuid);
-        // Ordem ordem = new Ordem(uuid, ordemDTO);
+        Ordem ordem = new Ordem(uuid, ordemDTO);
 
         return Panache.withTransaction(ordem::persist)
                 .replaceWith(Response.ok(ordem).status(Response.Status.CREATED)::build);
