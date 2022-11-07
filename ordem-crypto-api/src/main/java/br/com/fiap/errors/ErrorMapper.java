@@ -40,11 +40,11 @@ public class ErrorMapper implements ExceptionMapper<Exception> {
         }
 
         ObjectNode exceptionJson = objectMapper.createObjectNode();
-        exceptionJson.put("exceptionType", throwable.getClass().getName());
-        exceptionJson.put("code", code);
+        // exceptionJson.put("exceptionType", throwable.getClass().getName());
+        exceptionJson.put("statusCode", code);
 
         if (exception.getMessage() != null) {
-            exceptionJson.put("error", throwable.getMessage());
+            exceptionJson.put("message", throwable.getMessage());
         }
 
         return Response.status(code)
