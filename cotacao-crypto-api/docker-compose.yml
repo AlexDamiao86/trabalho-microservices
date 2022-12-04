@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  cotacao-crypto-api:
+    image: alexdamiao86/cotacao-crypto-api:latest
+    ports:
+    - "5555:5555"
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+
