@@ -6,6 +6,16 @@ import swaggerUi from 'swagger-ui-express';
 import 'express-async-errors';
 import { RegisterRoutes } from '../build/routes';
 import { ValidateError } from 'tsoa';
+import { AppDataSource } from './data-source';
+
+AppDataSource
+    .initialize()
+    .then(() => {
+        console.log("Data Source has been initialized!")
+    })
+    .catch((err) => {
+        console.error("Error during Data Source initialization:", err)
+    });
 
 const app = express();
 app.use(express.json());

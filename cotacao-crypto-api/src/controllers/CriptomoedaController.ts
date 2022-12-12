@@ -1,11 +1,10 @@
 import { Body, Path, Put, Patch, Get, Post, Delete, Route, Response, Controller,
   SuccessResponse, Res, TsoaResponse } from 'tsoa';
-import { CriptomoedaDTO } from '../dto/CriptomoedaDTO';
 import { CreateCriptomoedaDTO } from '../dto/CreateCriptomoedaRequestDTO';
 import { UpdateCriptomoedaDTO } from '../dto/UpdateCriptomoedaRequestDTO';
 import { UpdateCotacaoCriptomoedaDTO } from '../dto/UpdateCotacaoCriptomoedaRequestDTO';
-
-const { criptomoedasRepository } = require('../loaders/CarregarCriptomoedasRepository');
+import { AppDataSource } from '../data-source';
+import { Criptomoeda } from '../entity/Criptomoeda';
 
 interface ValidateErrorJSON {
   message: 'Erro de validação';
@@ -20,8 +19,9 @@ export class CriptomoedaController extends Controller {
    * @returns Lista de criptomoedas com nome, descricao, cotação, etc.
    */
   @Get('/')
-  public async show(): Promise<CriptomoedaDTO[]> {
-    return criptomoedasRepository.all();
+  public async show(): Promise<Criptomoeda[]> {
+    const criptomoedas = await AppDataSource.getRepository(Criptomoeda).find();
+    return criptomoedas;
   }
 
   /**
@@ -34,9 +34,12 @@ export class CriptomoedaController extends Controller {
   public async execute(
     @Path() codigo: string,
     @Res() notFoundResponse: TsoaResponse< 404, { motivo: string; }>,
-  ): Promise<CriptomoedaDTO | null> {
-    return criptomoedasRepository.findByCodigo(codigo) != null
-      ? criptomoedasRepository.findByCodigo(codigo)
+  ): Promise<Criptomoeda | null> {
+    const criptomoeda = await AppDataSource.getRepository(Criptomoeda).findOneBy({
+      codigo: codigo.toUpperCase()
+    });
+    return criptomoeda != null
+      ? criptomoeda
       : notFoundResponse(404, { motivo: 'Criptomoeda não encontrada' });
   }
 
@@ -52,27 +55,21 @@ export class CriptomoedaController extends Controller {
   public async create(
     @Body() requestBody: CreateCriptomoedaDTO,
     @Res() notFoundResponse: TsoaResponse< 406, { motivo: string; }>,
-  ): Promise<CriptomoedaDTO> {
+  ): Promise<Criptomoeda> {
     this.setStatus(201);
-    const { codigo, nome, descricao, cotacao_compra, cotacao_venda, variacao } =
-      requestBody;
+    const { codigo } = requestBody;
 
-    const criptomoedaExistente = criptomoedasRepository.findByCodigo(codigo);
+    const criptomoedaExistente = await AppDataSource.getRepository(Criptomoeda).findOneBy({
+      codigo: codigo.toUpperCase()
+    });
 
     if (criptomoedaExistente) {
       return notFoundResponse(406, { motivo: 'Criptomoeda existente. Utilize a opção de alterar (PUT)' });
     }
 
-    const novaCriptomoeda = criptomoedasRepository.create({
-      codigo,
-      nome,
-      descricao,
-      cotacao_compra,
-      cotacao_venda,
-      variacao,
-    });
-
-    return novaCriptomoeda as unknown as CriptomoedaDTO;
+    const criptomoeda = AppDataSource.getRepository(Criptomoeda).create(requestBody);
+    const novaCriptomoeda = await AppDataSource.getRepository(Criptomoeda).save(criptomoeda);
+    return novaCriptomoeda;
   }
 
   /**
@@ -88,11 +85,13 @@ export class CriptomoedaController extends Controller {
     @Res() notFoundResponse: TsoaResponse< 404, { motivo: string; }>,
   ): Promise<void> {
     this.setStatus(204);
-    const criptomoedaExistente = criptomoedasRepository.findByCodigo(codigo);
+    const criptomoedaExistente = await AppDataSource.getRepository(Criptomoeda).findOneBy({
+      codigo: codigo.toUpperCase()
+    });
     if (!criptomoedaExistente) {
       return notFoundResponse(404, { motivo: 'Criptomoeda não existe. Utilize a opção de criar (POST)' });
     }
-    criptomoedasRepository.delete(codigo);
+    await AppDataSource.getRepository(Criptomoeda).delete(criptomoedaExistente.id);
   }
 
   /**
@@ -108,23 +107,18 @@ export class CriptomoedaController extends Controller {
     @Path() codigo: string,
     @Body() requestBody: UpdateCriptomoedaDTO,
     @Res() notFoundResponse: TsoaResponse< 404, { motivo: string; }>,
-  ): Promise<CriptomoedaDTO | null> {
-    const { nome, descricao, cotacao_compra, cotacao_venda, variacao } =
-      requestBody;
-
-    const criptomoedaExistente = criptomoedasRepository.findByCodigo(codigo);
+  ): Promise<Criptomoeda | null> {
+    const criptomoedaExistente = await AppDataSource.getRepository(Criptomoeda).findOneBy({
+      codigo: codigo.toUpperCase()
+    });
 
     if (!criptomoedaExistente) {
       return notFoundResponse(404, { motivo: 'Criptomoeda não existe. Utilize a opção de criar (POST)' });
     }
 
-    return criptomoedasRepository.update(criptomoedaExistente, {
-      nome,
-      descricao,
-      cotacao_compra,
-      cotacao_venda,
-      variacao,
-    });
+    AppDataSource.getRepository(Criptomoeda).merge(criptomoedaExistente, requestBody);
+    const criptomoedaAtualizada = await AppDataSource.getRepository(Criptomoeda).save(criptomoedaExistente);
+    return criptomoedaAtualizada;
   }
 
   /**
@@ -140,19 +134,17 @@ export class CriptomoedaController extends Controller {
     @Path() codigo: string,
     @Body() requestBody: UpdateCotacaoCriptomoedaDTO,
     @Res() notFoundResponse: TsoaResponse< 404, { motivo: string; }>,
-  ): Promise<CriptomoedaDTO | null> {
-    const { cotacao_compra, cotacao_venda, variacao } = requestBody;
-
-    const criptomoedaExistente = criptomoedasRepository.findByCodigo(codigo);
+  ): Promise<Criptomoeda | null> {
+    const criptomoedaExistente = await AppDataSource.getRepository(Criptomoeda).findOneBy({
+      codigo: codigo.toUpperCase()
+    });
 
     if (!criptomoedaExistente) {
       return notFoundResponse(404, { motivo: 'Criptomoeda não existe. Utilize a opção de criar (POST)' });
     }
 
-    return criptomoedasRepository.updateCotacao(criptomoedaExistente, {
-      cotacao_compra,
-      cotacao_venda,
-      variacao,
-    });
+    AppDataSource.getRepository(Criptomoeda).merge(criptomoedaExistente, requestBody);
+    const criptomoedaAtualizada = await AppDataSource.getRepository(Criptomoeda).save(criptomoedaExistente);
+    return criptomoedaAtualizada;
   }
 }

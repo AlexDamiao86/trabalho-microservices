@@ -1,6 +1,5 @@
 const { Socket } = require('phoenix-channels');
 const { ws_endpoint } = require('../config/index');
-const { criptomoedasRepository } = require('../loaders/CarregarCriptomoedasRepository');
 const { descricaoCriptomoedas } = require('../loaders/CarregarDescricaoCriptomoedas');
 
 import CreateUpdateCriptomoedaService from '../services/CreateUpdateCriptomoedaService';
@@ -43,7 +42,6 @@ class SubscribeTickerService {
       if (response.success == true) {
         console.log('Evento "price" recebido com sucesso!');
         for (var market in response) {
-          console.log(response[market]);
           if (market != 'success') {
             // Verifica se cripto teve tratamento de descricao
             // Se não houve tratamento, inclui no Map de descrição
@@ -58,9 +56,7 @@ class SubscribeTickerService {
             const { codigo, nome, descricao } = descricaoCriptomoedas.get(market);
             const { buy, sell } = response[market];
             const variacao = response[market].var;
-            const criptomoeda = new CreateUpdateCriptomoedaService(
-              criptomoedasRepository,
-            ).execute({
+            new CreateUpdateCriptomoedaService().execute({
               codigo,
               nome,
               descricao,
@@ -68,7 +64,6 @@ class SubscribeTickerService {
               cotacao_compra: sell,
               variacao
             });
-            console.log(criptomoeda);
           }
         }
       }
