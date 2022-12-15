@@ -1,10 +1,11 @@
 {
    "name": "cotacao-crypto-api",
-   "version": "1.0.0",
+   "version": "1.1.0",
    "description": "API de Cotação de Criptomoedas",
    "main": "build/src/server.js",
    "license": "MIT",
    "scripts": {
+      "clear": "rm -rf build",
       "prebuild": "npm run swagger",
       "build": "tsc",
       "start": "ts-node src/server.ts",

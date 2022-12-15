@@ -52,13 +52,11 @@ export default class CreateCriptomoedas1670803112581 implements MigrationInterfa
             {
               name: 'timestamp_criacao',
               type: 'timestamp',
-              isNullable: true,
               default: 'CURRENT_TIMESTAMP',
             },
             {
               name: 'timestamp_atualizacao',
               type: 'timestamp',
-              isNullable: true,
               default: 'CURRENT_TIMESTAMP'
             },
           ],

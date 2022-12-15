@@ -57,17 +57,26 @@ export class CriptomoedaController extends Controller {
     @Res() notFoundResponse: TsoaResponse< 406, { motivo: string; }>,
   ): Promise<Criptomoeda> {
     this.setStatus(201);
-    const { codigo } = requestBody;
+    let { codigo } = requestBody;
+    const { nome, descricao, cotacao_compra, cotacao_venda, variacao } = requestBody;
+    codigo = codigo.toUpperCase();
 
     const criptomoedaExistente = await AppDataSource.getRepository(Criptomoeda).findOneBy({
-      codigo: codigo.toUpperCase()
+      codigo
     });
 
     if (criptomoedaExistente) {
       return notFoundResponse(406, { motivo: 'Criptomoeda existente. Utilize a opção de alterar (PUT)' });
     }
 
-    const criptomoeda = AppDataSource.getRepository(Criptomoeda).create(requestBody);
+    const criptomoeda = AppDataSource.getRepository(Criptomoeda).create({
+      codigo,
+      nome,
+      descricao,
+      cotacao_compra,
+      cotacao_venda,
+      variacao
+    });
     const novaCriptomoeda = await AppDataSource.getRepository(Criptomoeda).save(criptomoeda);
     return novaCriptomoeda;
   }

@@ -1,13 +1,46 @@
-version: '3'
+version: '3.9'
 
 services:
-  cotacao-crypto-api:
-    image: alexdamiao86/cotacao-crypto-api:latest
+  mysqldb:
+    image: mysql:8.0.30
+    container_name: mysqldb
+    restart: always
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQLDB_DATABASE
     ports:
-    - "5555:5555"
-    deploy:
-      replicas: 3
-      restart_policy:
-        condition: on-failure
-        max_attempts: 3
+      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 6
+
+  cotacao-crypto:
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    image: alexdamiao86/cotacao-crypto-api:1.1.0
+    # Desasteriscar linhas abaixo para realizar build local da imagem
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    container_name: cotacao-crypto
+    ports:
+    - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    env_file: ./.env
+    environment:
+      - DB_HOST=$MYSQLDB_HOST
+      - DB_USER=$MYSQLDB_USER
+      - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - DB_NAME=$MYSQLDB_DATABASE
+      - DB_PORT=$MYSQLDB_DOCKER_PORT
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
+
 

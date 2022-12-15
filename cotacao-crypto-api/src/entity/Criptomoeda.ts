@@ -13,17 +13,17 @@ export class ColumnNumericTransformer {
 export class Criptomoeda {
     @PrimaryGeneratedColumn('uuid')
     id: string
-    @Column()
+    @Column({nullable: false})
     codigo: string;
-    @Column()
+    @Column({nullable: false})
     nome: string;
-    @Column()
+    @Column({nullable: true})
     descricao: string;
-    @Column({type: "decimal", precision: 12, scale: 4, transformer: new ColumnNumericTransformer()})
+    @Column({nullable: false, type: "decimal", precision: 12, scale: 4, transformer: new ColumnNumericTransformer()})
     cotacao_compra: number;
-    @Column({type: "decimal", precision: 12, scale: 4, transformer: new ColumnNumericTransformer()})
+    @Column({nullable: false, type: "decimal", precision: 12, scale: 4, transformer: new ColumnNumericTransformer()})
     cotacao_venda: number;
-    @Column({type: "decimal", precision: 6, scale: 2, transformer: new ColumnNumericTransformer()})
+    @Column({nullable: true, type: "decimal", precision: 6, scale: 2, transformer: new ColumnNumericTransformer()})
     variacao: number;
     @CreateDateColumn()
     timestamp_criacao: Timestamp;
