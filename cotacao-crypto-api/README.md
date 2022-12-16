@@ -11,23 +11,49 @@ Além disso, disponibiliza CRUD de criptomoedas através de API Rest. Permite cr
 
 ### 1.1. Localmente
 
-Após clonar o código do repositório GitHub:
-
-
+Após clonar o código do repositório GitHub.
 ```bash
-$ cd cotacao-crypto-api
-$ npm install
-$ npm run build
-$ npm run dev
+cd cotacao-crypto-api
+```
+
+Configurar o SGBD a ser executado através de arquivo .env. Segue abaixo exemplo de arquivo .env preenchido para usar um SGBD MySQL local (instalado na máquina). Pode ser utilizado o MySQL em container, tal como o arquivo .env.sample no diretório principal do projeto.
+
+```env
+NODE_LOCAL_PORT=5555
+NODE_DOCKER_PORT=5555
+
+BITPRECO_WS_API_ENDPOINT='wss://websocket.bitpreco.com'
+
+MYSQLDB_HOST=127.0.0.1
+MYSQLDB_USER=root
+MYSQLDB_ROOT_PASSWORD=
+MYSQLDB_DATABASE=cotacao_crypto
+MYSQLDB_LOCAL_PORT=3306
+MYSQLDB_DOCKER_PORT=3306
+```
+
+Criar banco de dados "cotacao_crypto" (somente se for utilizado MySQL local):
+```bash
+mysql -u root < ./create_database.sql
+```
+
+Instalar dependências necessárias, realizar build e executar o projeto:
+```bash
+npm install
+npm run dev
 ```
 
 ### 1.2. Utilizar Docker Compose
 
-Após clonar o código do repositório GitHub:
+Após clonar o código do repositório GitHub.
+```bash
+cd cotacao-crypto-api
+```
+
+No diretório principal, renomear o arquivo .env.sample para .env. Executar os serviços:
 
 ```bash
-$ cd cotacao-crypto-api
-$ docker-compose up
+docker-compose up
 ```
 
 ## 2. Testar aplicação
@@ -49,7 +75,7 @@ localhost:5555/docs/
 
 ### 2.3. Encerrar serviços
 
-Teclar [Ctrl + C] no terminal onde foi executado o comando de iniciar execução. Para remover os serviços, executar o seguinte comando:
+Teclar [Ctrl + C] no terminal onde foi executado o comando de iniciar execução. No caso de execução em Docker compose, executar o passo adicional abaixo para remover os serviços:
 
 ```bash
 docker-compose down
