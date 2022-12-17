@@ -27,8 +27,9 @@ services:
 
   cotacao-crypto:
     depends_on:
-      mysqldb:
-        condition: service_healthy
+      - mysqldb
+        # condition: service_healthy
+    command: ["./wait-for-it.sh", mysqldb:$MYSQLDB_DOCKER_PORT, "--", "node", "./build/src/server.js"]
     image: alexdamiao86/cotacao-crypto-api:1.1.0
     # Desasteriscar linhas abaixo para realizar build local da imagem
     # build:
