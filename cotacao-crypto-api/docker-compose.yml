@@ -17,6 +17,13 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 10s
       retries: 6
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    networks:
+      - net
 
   cotacao-crypto:
     depends_on:
@@ -39,8 +46,19 @@ services:
       - MYSQLDB_DOCKER_PORT=$MYSQLDB_DOCKER_PORT
     stdin_open: true
     tty: true
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on_failure
+        max_attempts: 3
+    networks:
+      - net
 
 volumes:
   db:
+
+networks:
+  net:
+    external: true
 
 
