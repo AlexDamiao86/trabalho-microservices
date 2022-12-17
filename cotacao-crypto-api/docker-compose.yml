@@ -48,7 +48,7 @@ services:
     deploy:
       replicas: 3
       restart_policy:
-        condition: on_failure
+        condition: on-failure
         max_attempts: 3
     networks:
       - net
